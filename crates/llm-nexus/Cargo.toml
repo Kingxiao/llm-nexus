@@ -1,0 +1,53 @@
+[package]
+name = "llm-nexus"
+version.workspace = true
+edition.workspace = true
+description = "Unified LLM adapter with middleware pipeline, routing, and cost tracking"
+license.workspace = true
+repository = "https://github.com/Kingxiao/llm-nexus"
+keywords = ["llm", "ai", "openai", "anthropic"]
+categories = ["api-bindings"]
+
+[dependencies]
+llm-nexus-core = { path = "../llm-nexus-core" }
+llm-nexus-registry = { path = "../llm-nexus-registry" }
+llm-nexus-metrics = { path = "../llm-nexus-metrics" }
+llm-nexus-router = { path = "../llm-nexus-router" }
+
+llm-nexus-provider-openai = { path = "../llm-nexus-provider-openai", optional = true }
+llm-nexus-provider-anthropic = { path = "../llm-nexus-provider-anthropic", optional = true }
+llm-nexus-provider-gemini = { path = "../llm-nexus-provider-gemini", optional = true }
+llm-nexus-provider-deepseek = { path = "../llm-nexus-provider-deepseek", optional = true }
+llm-nexus-provider-azure = { path = "../llm-nexus-provider-azure", optional = true }
+llm-nexus-provider-bedrock = { path = "../llm-nexus-provider-bedrock", optional = true }
+llm-nexus-provider-vertex = { path = "../llm-nexus-provider-vertex", optional = true }
+
+tokio.workspace = true
+async-trait.workspace = true
+tracing.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+futures.workspace = true
+
+[dev-dependencies]
+wiremock.workspace = true
+serde_json.workspace = true
+tokio = { workspace = true, features = ["test-util"] }
+anyhow.workspace = true
+futures.workspace = true
+llm-nexus-cache = { path = "../llm-nexus-cache" }
+llm-nexus-guardrail = { path = "../llm-nexus-guardrail" }
+
+[features]
+default = ["openai", "anthropic"]
+openai = ["dep:llm-nexus-provider-openai"]
+anthropic = ["dep:llm-nexus-provider-anthropic"]
+gemini = ["dep:llm-nexus-provider-gemini"]
+deepseek = ["dep:llm-nexus-provider-deepseek", "openai"]
+azure = ["dep:llm-nexus-provider-azure", "openai"]
+bedrock = ["dep:llm-nexus-provider-bedrock"]
+vertex = ["dep:llm-nexus-provider-vertex", "openai"]
+sqlite-metrics = ["llm-nexus-metrics/sqlite"]
+prometheus-metrics = ["llm-nexus-metrics/prometheus"]
+remote-registry = ["llm-nexus-registry/remote-sync"]
+full = ["openai", "anthropic", "gemini", "deepseek", "azure", "bedrock", "vertex"]

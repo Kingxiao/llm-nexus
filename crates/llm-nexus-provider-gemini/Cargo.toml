@@ -1,0 +1,24 @@
+[package]
+name = "llm-nexus-provider-gemini"
+version.workspace = true
+edition.workspace = true
+description = "Google Gemini generateContent API provider adapter"
+license.workspace = true
+repository = "https://github.com/Kingxiao/llm-nexus"
+keywords = ["llm", "ai", "openai", "anthropic"]
+categories = ["api-bindings"]
+
+[dependencies]
+llm-nexus-core = { path = "../llm-nexus-core" }
+reqwest.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+async-trait.workspace = true
+futures.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+uuid.workspace = true
+
+[dev-dependencies]
+wiremock.workspace = true
+tokio = { workspace = true, features = ["test-util"] }

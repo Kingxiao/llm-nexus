@@ -1,0 +1,216 @@
+# Model registry for LLM Nexus
+# verified: 2026-04-04
+
+[[models]]
+id = "gpt-5.4"
+provider = "openai"
+display_name = "GPT-5.4"
+context_window = 1000000
+max_output_tokens = 100000
+input_price_per_1m = 2.50
+output_price_per_1m = 15.00
+capabilities = ["Chat", "CodeGeneration", "Reasoning", "ImageUnderstanding", "LongContext"]
+[models.features]
+vision = true
+tool_use = true
+json_mode = true
+streaming = true
+system_prompt = true
+
+[[models]]
+id = "gpt-5.4-mini"
+provider = "openai"
+display_name = "GPT-5.4 Mini"
+context_window = 1000000
+max_output_tokens = 100000
+input_price_per_1m = 0.75
+output_price_per_1m = 4.50
+capabilities = ["Chat", "CodeGeneration", "Reasoning", "ImageUnderstanding", "LongContext"]
+[models.features]
+vision = true
+tool_use = true
+json_mode = true
+streaming = true
+system_prompt = true
+
+[[models]]
+id = "gpt-5.4-nano"
+provider = "openai"
+display_name = "GPT-5.4 Nano"
+context_window = 1000000
+max_output_tokens = 100000
+input_price_per_1m = 0.20
+output_price_per_1m = 1.25
+capabilities = ["Chat", "CodeGeneration", "Reasoning", "LongContext"]
+[models.features]
+vision = true
+tool_use = true
+json_mode = true
+streaming = true
+system_prompt = true
+
+[[models]]
+id = "gpt-4o-2024-08-06"
+provider = "openai"
+display_name = "GPT-4o (2024-08-06)"
+context_window = 128000
+max_output_tokens = 16384
+input_price_per_1m = 2.50
+output_price_per_1m = 10.00
+capabilities = ["Chat", "CodeGeneration", "Reasoning", "ImageUnderstanding"]
+[models.features]
+vision = true
+tool_use = true
+json_mode = true
+streaming = true
+system_prompt = true
+
+[[models]]
+id = "claude-sonnet-4-6-20250514"
+provider = "anthropic"
+display_name = "Claude Sonnet 4.6"
+context_window = 1000000
+max_output_tokens = 64000
+input_price_per_1m = 3.00
+output_price_per_1m = 15.00
+capabilities = ["Chat", "CodeGeneration", "Reasoning", "ImageUnderstanding", "LongContext"]
+[models.features]
+vision = true
+tool_use = true
+json_mode = true
+streaming = true
+system_prompt = true
+
+[[models]]
+id = "claude-opus-4-6-20250514"
+provider = "anthropic"
+display_name = "Claude Opus 4.6"
+context_window = 1000000
+max_output_tokens = 64000
+input_price_per_1m = 5.00
+output_price_per_1m = 25.00
+capabilities = ["Chat", "CodeGeneration", "Reasoning", "ImageUnderstanding", "LongContext"]
+[models.features]
+vision = true
+tool_use = true
+json_mode = true
+streaming = true
+system_prompt = true
+
+[[models]]
+id = "claude-haiku-4-5-20251001"
+provider = "anthropic"
+display_name = "Claude Haiku 4.5"
+context_window = 200000
+max_output_tokens = 16384
+input_price_per_1m = 1.00
+output_price_per_1m = 5.00
+capabilities = ["Chat", "CodeGeneration", "Reasoning", "ImageUnderstanding"]
+[models.features]
+vision = true
+tool_use = true
+json_mode = true
+streaming = true
+system_prompt = true
+
+[[models]]
+id = "gemini-2.5-flash"
+provider = "gemini"
+display_name = "Gemini 2.5 Flash"
+context_window = 1048576
+max_output_tokens = 65536
+input_price_per_1m = 0.30
+output_price_per_1m = 0.60
+capabilities = ["Chat", "CodeGeneration", "Reasoning", "ImageUnderstanding", "LongContext"]
+[models.features]
+vision = true
+tool_use = true
+json_mode = true
+streaming = true
+system_prompt = true
+
+[[models]]
+id = "deepseek-chat"
+provider = "deepseek"
+display_name = "DeepSeek Chat"
+context_window = 65536
+max_output_tokens = 8192
+input_price_per_1m = 0.28
+output_price_per_1m = 0.42
+capabilities = ["Chat", "CodeGeneration", "Reasoning"]
+[models.features]
+vision = false
+tool_use = true
+json_mode = true
+streaming = true
+system_prompt = true
+
+[[models]]
+id = "deepseek-reasoner"
+provider = "deepseek"
+display_name = "DeepSeek Reasoner"
+context_window = 65536
+max_output_tokens = 16384
+input_price_per_1m = 0.55
+output_price_per_1m = 2.19
+capabilities = ["Chat", "CodeGeneration", "Reasoning"]
+[models.features]
+vision = false
+tool_use = false
+json_mode = false
+streaming = true
+system_prompt = true
+
+# OpenRouter models — verified: 2026-04-04
+[[models]]
+id = "openrouter/auto"
+provider = "openrouter"
+display_name = "OpenRouter Auto"
+context_window = 128000
+max_output_tokens = 4096
+input_price_per_1m = 1.00
+output_price_per_1m = 3.00
+capabilities = ["Chat"]
+[models.features]
+vision = false
+tool_use = true
+json_mode = true
+streaming = true
+system_prompt = true
+
+# MiniMax models — verified: 2026-04-04
+[[models]]
+id = "MiniMax-M2"
+provider = "minimax"
+display_name = "MiniMax M2"
+context_window = 204800
+max_output_tokens = 204800
+input_price_per_1m = 1.00
+output_price_per_1m = 4.00
+capabilities = ["Chat", "Reasoning", "LongContext"]
+[models.features]
+vision = false
+tool_use = true
+json_mode = true
+streaming = true
+system_prompt = true
+
+# 302.AI models (OpenAI-compatible proxy) — verified: 2026-04-04
+# Note: uses same model IDs as OpenAI since 302.AI is an OpenAI proxy.
+# If both openai and ai302 providers are active, the model matched depends
+# on which appears first in models.toml.
+[[models]]
+id = "gpt-4o"
+provider = "ai302"
+display_name = "GPT-4o via 302.AI"
+context_window = 128000
+max_output_tokens = 16384
+input_price_per_1m = 2.50
+output_price_per_1m = 10.00
+capabilities = ["Chat", "CodeGeneration", "Reasoning", "ImageUnderstanding"]
+[models.features]
+vision = true
+tool_use = true
+json_mode = true
+streaming = true
+system_prompt = true

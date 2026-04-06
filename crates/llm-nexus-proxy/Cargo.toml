@@ -1,0 +1,38 @@
+[package]
+name = "llm-nexus-proxy"
+version.workspace = true
+edition.workspace = true
+description = "OpenAI-compatible HTTP proxy server with virtual keys"
+license.workspace = true
+repository = "https://github.com/Kingxiao/llm-nexus"
+keywords = ["llm", "ai", "openai", "anthropic"]
+categories = ["api-bindings"]
+
+[dependencies]
+llm-nexus = { path = "../llm-nexus", features = ["full"] }
+llm-nexus-core = { path = "../llm-nexus-core" }
+llm-nexus-metrics = { path = "../llm-nexus-metrics", optional = true, features = ["prometheus"] }
+
+axum = "0.8"          # verified: 2026-04-04
+tower = { version = "0.5", features = ["limit"] }
+tower-http = { version = "0.6", features = ["cors", "trace"] }  # verified: 2026-04-04
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+futures.workspace = true
+tracing.workspace = true
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+uuid.workspace = true
+chrono.workspace = true
+anyhow.workspace = true
+
+[dev-dependencies]
+wiremock.workspace = true
+reqwest = { workspace = true, features = ["json"] }
+tokio = { workspace = true, features = ["test-util"] }
+async-trait.workspace = true
+tempfile = "3"
+
+[features]
+default = []
+prometheus = ["dep:llm-nexus-metrics"]

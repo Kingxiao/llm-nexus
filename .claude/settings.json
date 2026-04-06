@@ -1,0 +1,39 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=\"$CLAUDE_TOOL_INPUT_FILE_PATH\"; echo \"$FILE\" | grep -q '\\.rs$' && rustfmt \"$FILE\" 2>/dev/null || true"
+          }
+        ],
+        "description": "Auto-format Rust files after write"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "INPUT=$(cat); CMD=$(echo \"$INPUT\" | jq -r '.tool_input.command // empty'); echo \"$CMD\" | grep -qw 'git commit' && { cd /home/zichuan/.openclaw/workspace/llm-adapter && [ ! -f Cargo.toml ] && exit 0; RESULT=$(cargo test --workspace 2>&1); RC=$?; echo \"$RESULT\" | tail -30; [ $RC -ne 0 ] && exit 2 || exit 0; } || exit 0"
+          }
+        ],
+        "description": "All workspace tests must pass before git commit"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "INPUT=$(cat); [ \"$(echo $INPUT | jq -r '.stop_hook_active')\" = 'true' ] && exit 0; cd /home/zichuan/.openclaw/workspace/llm-adapter && [ ! -f Cargo.toml ] && exit 0; RESULT=$(cargo build --workspace 2>&1); RC=$?; echo \"$RESULT\" | tail -15; [ $RC -ne 0 ] && exit 2 || exit 0"
+          }
+        ],
+        "description": "Workspace must build before agent stops"
+      }
+    ]
+  }
+}

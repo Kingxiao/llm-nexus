@@ -1,0 +1,25 @@
+[package]
+name = "llm-nexus-provider-vertex"
+version.workspace = true
+edition.workspace = true
+description = "Google Vertex AI provider with OAuth2 token management"
+license.workspace = true
+repository = "https://github.com/Kingxiao/llm-nexus"
+keywords = ["llm", "ai", "openai", "anthropic"]
+categories = ["api-bindings"]
+
+[dependencies]
+llm-nexus-core = { path = "../llm-nexus-core" }
+llm-nexus-provider-openai = { path = "../llm-nexus-provider-openai" }
+
+async-trait.workspace = true
+reqwest.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+futures.workspace = true
+tracing.workspace = true
+tokio.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["test-util"] }
+wiremock.workspace = true

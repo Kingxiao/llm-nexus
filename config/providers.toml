@@ -1,0 +1,68 @@
+# Provider configurations for LLM Nexus
+# verified: 2026-04-04
+
+[providers.openai]
+display_name = "OpenAI"
+base_url = "https://api.openai.com/v1"
+api_key_env = "OPENAI_API_KEY"
+auth_header = "Authorization"
+auth_scheme = "Bearer"
+timeout_secs = 120
+max_retries = 3
+
+[providers.anthropic]
+display_name = "Anthropic"
+base_url = "https://api.anthropic.com"
+api_key_env = "ANTHROPIC_API_KEY"
+auth_header = "x-api-key"
+auth_scheme = ""
+api_version = "2023-06-01"
+timeout_secs = 120
+max_retries = 3
+
+[providers.gemini]
+display_name = "Google Gemini"
+base_url = "https://generativelanguage.googleapis.com"
+api_key_env = "GEMINI_API_KEY"
+auth_scheme = "query_param"
+timeout_secs = 120
+max_retries = 3
+
+[providers.deepseek]
+display_name = "DeepSeek"
+base_url = "https://api.deepseek.com"
+api_key_env = "DEEPSEEK_API_KEY"
+auth_header = "Authorization"
+auth_scheme = "Bearer"
+timeout_secs = 120
+max_retries = 3
+
+[providers.openrouter]
+display_name = "OpenRouter"
+base_url = "https://openrouter.ai/api/v1"
+api_key_env = "OPENROUTER_API_KEY"
+auth_header = "Authorization"
+auth_scheme = "Bearer"
+timeout_secs = 120
+max_retries = 3
+openai_compatible = true
+
+[providers.minimax]
+display_name = "MiniMax"
+base_url = "https://api.minimaxi.com/v1"  # verified: 2026-04-04, 国内版 (.com)
+api_key_env = "MINIMAX_API_KEY"
+auth_header = "Authorization"
+auth_scheme = "Bearer"
+timeout_secs = 120
+max_retries = 3
+openai_compatible = true
+
+[providers.ai302]
+display_name = "302.AI"
+base_url = "https://api.302.ai/v1"  # verified: 2026-04-04
+api_key_env = "API_302_KEY"
+auth_header = "Authorization"
+auth_scheme = "Bearer"
+timeout_secs = 120
+max_retries = 3
+openai_compatible = true

@@ -1,0 +1,24 @@
+[package]
+name = "llm-nexus-metrics"
+version.workspace = true
+edition.workspace = true
+description = "Metrics backends: in-memory, SQLite, Prometheus export"
+license.workspace = true
+repository = "https://github.com/Kingxiao/llm-nexus"
+keywords = ["llm", "ai", "openai", "anthropic"]
+categories = ["api-bindings"]
+
+[dependencies]
+llm-nexus-core = { path = "../llm-nexus-core" }
+tokio = { workspace = true }
+async-trait = { workspace = true }
+chrono = { workspace = true }
+tracing = { workspace = true }
+rusqlite = { version = "0.35", features = ["bundled"], optional = true }  # verified: 2026-04-04
+serde_json = { workspace = true, optional = true }
+prometheus-client = { version = "0.24", optional = true }  # verified: 2026-04-04
+
+[features]
+default = []
+sqlite = ["dep:rusqlite", "dep:serde_json"]
+prometheus = ["dep:prometheus-client"]

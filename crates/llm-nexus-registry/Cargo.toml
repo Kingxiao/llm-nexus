@@ -1,0 +1,29 @@
+[package]
+name = "llm-nexus-registry"
+version.workspace = true
+edition.workspace = true
+description = "Model metadata registry with TOML config and remote sync"
+license.workspace = true
+repository = "https://github.com/Kingxiao/llm-nexus"
+keywords = ["llm", "ai", "openai", "anthropic"]
+categories = ["api-bindings"]
+
+[dependencies]
+llm-nexus-core = { path = "../llm-nexus-core" }
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+toml.workspace = true
+async-trait.workspace = true
+tracing.workspace = true
+reqwest = { workspace = true, optional = true }
+chrono = { workspace = true, optional = true }
+
+[dev-dependencies]
+wiremock.workspace = true
+tokio = { workspace = true, features = ["test-util"] }
+tempfile = "3"
+
+[features]
+default = []
+remote-sync = ["dep:reqwest", "dep:chrono"]

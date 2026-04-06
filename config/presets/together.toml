@@ -1,0 +1,88 @@
+# Together AI 云端推理预设
+# 使用方法：
+#   1. 注册 Together AI: https://together.ai
+#   2. 获取 API key，设置环境变量: export TOGETHER_API_KEY="your_together_api_key_here"
+#   3. 将此文件内容合并到 config/providers.toml 和 config/models.toml
+#
+# 定价来源: https://www.together.ai/pricing  # verified: 2026-04-06
+
+[providers.together]
+display_name = "Together AI"
+base_url = "https://api.together.xyz/v1"  # verified: 2026-04-06
+api_key_env = "TOGETHER_API_KEY"
+auth_header = "Authorization"
+auth_scheme = "Bearer"
+timeout_secs = 120
+max_retries = 3
+openai_compatible = true
+
+# --- 模型定义 ---
+# Together AI 模型 ID 格式为 <org>/<model>
+
+# verified: 2026-04-06
+[[models]]
+id = "meta-llama/Llama-3.3-70B-Instruct-Turbo"
+provider = "together"
+display_name = "Llama 3.3 70B Instruct Turbo (Together)"
+context_window = 131072
+max_output_tokens = 8192
+input_price_per_1m = 0.88
+output_price_per_1m = 0.88
+capabilities = ["Chat", "CodeGeneration", "Reasoning"]
+[models.features]
+vision = false
+tool_use = true
+json_mode = true
+streaming = true
+system_prompt = true
+
+# verified: 2026-04-06
+[[models]]
+id = "mistralai/Mixtral-8x22B-Instruct-v0.1"
+provider = "together"
+display_name = "Mixtral 8x22B Instruct (Together)"
+context_window = 65536
+max_output_tokens = 8192
+input_price_per_1m = 1.20
+output_price_per_1m = 1.20
+capabilities = ["Chat", "CodeGeneration"]
+[models.features]
+vision = false
+tool_use = true
+json_mode = true
+streaming = true
+system_prompt = true
+
+# verified: 2026-04-06
+[[models]]
+id = "Qwen/Qwen2.5-72B-Instruct-Turbo"
+provider = "together"
+display_name = "Qwen 2.5 72B Instruct Turbo (Together)"
+context_window = 131072
+max_output_tokens = 8192
+input_price_per_1m = 1.20
+output_price_per_1m = 1.20
+capabilities = ["Chat", "CodeGeneration", "Reasoning"]
+[models.features]
+vision = false
+tool_use = true
+json_mode = true
+streaming = true
+system_prompt = true
+
+# verified: 2026-04-06
+[[models]]
+id = "deepseek-ai/DeepSeek-V3"
+provider = "together"
+display_name = "DeepSeek V3 (Together)"
+context_window = 65536
+max_output_tokens = 8192
+input_price_per_1m = 0.90
+output_price_per_1m = 0.90
+capabilities = ["Chat", "CodeGeneration", "Reasoning"]
+[models.features]
+vision = false
+tool_use = true
+json_mode = true
+streaming = true
+system_prompt = true

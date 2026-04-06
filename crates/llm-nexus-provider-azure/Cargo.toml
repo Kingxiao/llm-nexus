@@ -1,0 +1,24 @@
+[package]
+name = "llm-nexus-provider-azure"
+version.workspace = true
+edition.workspace = true
+description = "Azure OpenAI provider adapter"
+license.workspace = true
+repository = "https://github.com/Kingxiao/llm-nexus"
+keywords = ["llm", "ai", "openai", "anthropic"]
+categories = ["api-bindings"]
+
+[dependencies]
+llm-nexus-core = { path = "../llm-nexus-core" }
+llm-nexus-provider-openai = { path = "../llm-nexus-provider-openai" }
+
+reqwest.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+async-trait.workspace = true
+futures.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+wiremock.workspace = true
+tokio = { workspace = true, features = ["test-util"] }

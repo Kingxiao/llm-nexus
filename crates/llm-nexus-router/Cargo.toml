@@ -1,0 +1,15 @@
+[package]
+name = "llm-nexus-router"
+version.workspace = true
+edition.workspace = true
+description = "Intelligent routing: cost, latency, composite, cooldown, experiment"
+license.workspace = true
+repository = "https://github.com/Kingxiao/llm-nexus"
+keywords = ["llm", "ai", "openai", "anthropic"]
+categories = ["api-bindings"]
+
+[dependencies]
+llm-nexus-core = { path = "../llm-nexus-core" }
+tokio.workspace = true
+async-trait.workspace = true
+tracing.workspace = true

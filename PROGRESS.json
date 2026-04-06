@@ -1,0 +1,28 @@
+{
+  "project": "llm-nexus",
+  "status": "production-ready",
+  "stats": {
+    "commits": 45,
+    "crates": 16,
+    "tests": 295,
+    "lines": "~15300"
+  },
+  "providers": {
+    "chat": ["openai", "anthropic", "gemini", "deepseek", "azure", "bedrock"],
+    "embeddings": ["openai", "gemini"],
+    "openai_compatible": ["openrouter", "minimax", "302.ai", "any"]
+  },
+  "middleware": {
+    "builtin": ["retry", "timeout", "logging", "tracing"],
+    "pluggable": ["cache", "guardrail", "budget"]
+  },
+  "routing": {
+    "strategies": ["cost", "latency", "composite/weighted", "cooldown", "experiment/ab"]
+  },
+  "known_limitations": [
+    "Gemini streaming tool_calls are non-incremental (Gemini API behavior)",
+    "Bedrock ConverseStream lacks unit tests (EventReceiver not constructable outside AWS SDK)",
+    "MCP client untested end-to-end (requires running MCP server)",
+    "Streaming requests bypass cache and budget post-check (by design)"
+  ]
+}

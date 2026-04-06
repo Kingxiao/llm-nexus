@@ -1,0 +1,8 @@
+target/
+.git/
+.github/
+.claude/
+*.md
+!README.md
+.env*
+PROGRESS.json

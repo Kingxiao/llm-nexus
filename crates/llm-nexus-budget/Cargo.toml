@@ -1,0 +1,24 @@
+[package]
+name = "llm-nexus-budget"
+version.workspace = true
+edition.workspace = true
+description = "Spend limit middleware with per-key budget tracking"
+license.workspace = true
+repository = "https://github.com/Kingxiao/llm-nexus"
+keywords = ["llm", "ai", "openai", "anthropic"]
+categories = ["api-bindings"]
+
+[dependencies]
+llm-nexus-core = { path = "../llm-nexus-core" }
+llm-nexus-metrics = { path = "../llm-nexus-metrics" }
+
+async-trait.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+futures.workspace = true
+tracing.workspace = true
+chrono.workspace = true
+tokio.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["test-util"] }

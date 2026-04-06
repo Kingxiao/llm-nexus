@@ -1,0 +1,28 @@
+[package]
+name = "llm-nexus-provider-bedrock"
+version.workspace = true
+edition.workspace = true
+description = "AWS Bedrock Converse API provider adapter"
+license.workspace = true
+repository = "https://github.com/Kingxiao/llm-nexus"
+keywords = ["llm", "ai", "openai", "anthropic"]
+categories = ["api-bindings"]
+
+[dependencies]
+llm-nexus-core = { path = "../llm-nexus-core" }
+
+aws-config = { version = "1", features = ["behavior-version-latest"] }  # verified: 2026-04-04
+aws-sdk-bedrockruntime = "1"  # verified: 2026-04-04
+aws-smithy-types = "1"  # verified: 2026-04-04
+
+async-trait.workspace = true
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+futures.workspace = true
+tokio-stream = "0.1"
+uuid.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["test-util"] }

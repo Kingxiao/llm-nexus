@@ -1,0 +1,58 @@
+# vLLM 推理引擎预设
+# 使用方法：
+#   1. 安装 vLLM: pip install vllm (或用 Docker)
+#   2. 启动服务: vllm serve <model-name> --port 8000
+#      示例: vllm serve meta-llama/Llama-3.1-8B-Instruct --port 8000
+#   3. vLLM 默认提供 OpenAI 兼容 API
+#   4. 将此文件内容合并到 config/providers.toml 和 config/models.toml
+#
+# 无需 API key（本地部署），模型 ID 需与 vllm serve 启动时指定的模型一致
+# 如需修改端口，同步修改 base_url 或设置环境变量 VLLM_BASE_URL
+
+[providers.vllm]
+display_name = "vLLM (Local)"
+base_url = "http://localhost:8000/v1"  # verified: 2026-04-06
+api_key_env = "VLLM_API_KEY"  # vLLM 默认不校验 key，可留空或设为任意值
+auth_header = "Authorization"
+auth_scheme = "Bearer"
+timeout_secs = 300
+max_retries = 1
+openai_compatible = true
+
+# --- 模型定义 ---
+# vLLM 的模型 ID 必须与启动时 --model 参数完全一致
+# 以下为常见部署配置示例，请根据实际 serve 的模型调整
+
+# verified: 2026-04-06
+[[models]]
+id = "meta-llama/Llama-3.1-8B-Instruct"
+provider = "vllm"
+display_name = "Llama 3.1 8B Instruct (vLLM)"
+context_window = 131072
+max_output_tokens = 8192
+input_price_per_1m = 0.0
+output_price_per_1m = 0.0
+capabilities = ["Chat", "CodeGeneration", "Reasoning"]
+[models.features]
+vision = false
+tool_use = true
+json_mode = true
+streaming = true
+system_prompt = true
+
+# verified: 2026-04-06
+[[models]]
+id = "mistralai/Mistral-7B-Instruct-v0.3"
+provider = "vllm"
+display_name = "Mistral 7B Instruct v0.3 (vLLM)"
+context_window = 32768
+max_output_tokens = 8192
+input_price_per_1m = 0.0
+output_price_per_1m = 0.0
+capabilities = ["Chat", "CodeGeneration"]
+[models.features]
+vision = false
+tool_use = true
+json_mode = true
+streaming = true
+system_prompt = true
