@@ -87,12 +87,10 @@ impl MetricsBackend for SqliteMetrics {
                 record.timestamp.to_rfc3339(),
             ],
         )
-        .map_err(|e| {
-            NexusError::ProviderError {
-                provider: "metrics-sqlite".into(),
-                message: format!("failed to insert call record: {e}"),
-                status_code: None,
-            }
+        .map_err(|e| NexusError::ProviderError {
+            provider: "metrics-sqlite".into(),
+            message: format!("failed to insert call record: {e}"),
+            status_code: None,
         })?;
         Ok(())
     }
@@ -136,7 +134,8 @@ impl MetricsBackend for SqliteMetrics {
         }
         let _ = param_idx;
 
-        let param_refs: Vec<&dyn rusqlite::types::ToSql> = params.iter().map(|p| p.as_ref()).collect();
+        let param_refs: Vec<&dyn rusqlite::types::ToSql> =
+            params.iter().map(|p| p.as_ref()).collect();
 
         let stats = conn
             .query_row(&sql, param_refs.as_slice(), |row| {
@@ -159,9 +158,7 @@ impl MetricsBackend for SqliteMetrics {
 
         // P99 latency via a separate query (SQLite has no built-in percentile)
         let p99 = if stats.total_calls > 0 {
-            let mut p99_sql = String::from(
-                "SELECT latency_ms FROM call_records WHERE 1=1",
-            );
+            let mut p99_sql = String::from("SELECT latency_ms FROM call_records WHERE 1=1");
 
             // Reuse same filters
             let mut p99_params: Vec<Box<dyn rusqlite::types::ToSql>> = Vec::new();
@@ -193,11 +190,13 @@ impl MetricsBackend for SqliteMetrics {
             let p99_refs: Vec<&dyn rusqlite::types::ToSql> =
                 p99_params.iter().map(|p| p.as_ref()).collect();
 
-            let mut stmt = conn.prepare(&p99_sql).map_err(|e| NexusError::ProviderError {
-                provider: "metrics-sqlite".into(),
-                message: format!("p99 query prepare failed: {e}"),
-                status_code: None,
-            })?;
+            let mut stmt = conn
+                .prepare(&p99_sql)
+                .map_err(|e| NexusError::ProviderError {
+                    provider: "metrics-sqlite".into(),
+                    message: format!("p99 query prepare failed: {e}"),
+                    status_code: None,
+                })?;
 
             let latencies: Vec<u64> = stmt
                 .query_map(p99_refs.as_slice(), |row| row.get::<_, i64>(0))
@@ -266,8 +265,16 @@ mod tests {
         let ts = Utc::now();
 
         for i in 0..10 {
-            let record =
-                make_record("test-provider", "test-model", 100 + i * 10, 500, 200, 0.01, true, ts);
+            let record = make_record(
+                "test-provider",
+                "test-model",
+                100 + i * 10,
+                500,
+                200,
+                0.01,
+                true,
+                ts,
+            );
             db.record_call(record).await.unwrap();
         }
 
@@ -287,14 +294,32 @@ mod tests {
         let ts = Utc::now();
 
         for _ in 0..5 {
-            db.record_call(make_record("provider-a", "model-a", 100, 500, 200, 0.01, true, ts))
-                .await
-                .unwrap();
+            db.record_call(make_record(
+                "provider-a",
+                "model-a",
+                100,
+                500,
+                200,
+                0.01,
+                true,
+                ts,
+            ))
+            .await
+            .unwrap();
         }
         for _ in 0..3 {
-            db.record_call(make_record("provider-b", "model-b", 150, 600, 300, 0.02, true, ts))
-                .await
-                .unwrap();
+            db.record_call(make_record(
+                "provider-b",
+                "model-b",
+                150,
+                600,
+                300,
+                0.02,
+                true,
+                ts,
+            ))
+            .await
+            .unwrap();
         }
 
         let stats = db

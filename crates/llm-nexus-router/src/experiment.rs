@@ -95,10 +95,7 @@ impl Router for ExperimentRouter {
         self.inner.route(context).await
     }
 
-    async fn fallback_chain(
-        &self,
-        context: &RouteContext,
-    ) -> NexusResult<Vec<RouteDecision>> {
+    async fn fallback_chain(&self, context: &RouteContext) -> NexusResult<Vec<RouteDecision>> {
         // For fallback chain, put the experiment variant first, then inner chain
         let hash_key = context.experiment_key.clone().unwrap_or_else(|| {
             std::time::SystemTime::now()
@@ -164,8 +161,16 @@ mod tests {
         let exp = Experiment {
             name: "test-exp".into(),
             variants: vec![
-                Variant { provider_id: "a".into(), model_id: "m-a".into(), weight: 50 },
-                Variant { provider_id: "b".into(), model_id: "m-b".into(), weight: 50 },
+                Variant {
+                    provider_id: "a".into(),
+                    model_id: "m-a".into(),
+                    weight: 50,
+                },
+                Variant {
+                    provider_id: "b".into(),
+                    model_id: "m-b".into(),
+                    weight: 50,
+                },
             ],
         };
 
@@ -180,8 +185,16 @@ mod tests {
         let exp = Experiment {
             name: "split-test".into(),
             variants: vec![
-                Variant { provider_id: "a".into(), model_id: "m-a".into(), weight: 70 },
-                Variant { provider_id: "b".into(), model_id: "m-b".into(), weight: 30 },
+                Variant {
+                    provider_id: "a".into(),
+                    model_id: "m-a".into(),
+                    weight: 70,
+                },
+                Variant {
+                    provider_id: "b".into(),
+                    model_id: "m-b".into(),
+                    weight: 30,
+                },
             ],
         };
 
@@ -194,16 +207,21 @@ mod tests {
 
         let a_count = *counts.get("a").unwrap_or(&0);
         // Should be roughly 700 ± 50
-        assert!(a_count > 600 && a_count < 800, "a_count={a_count}, expected ~700");
+        assert!(
+            a_count > 600 && a_count < 800,
+            "a_count={a_count}, expected ~700"
+        );
     }
 
     #[test]
     fn test_single_variant_always_selected() {
         let exp = Experiment {
             name: "single".into(),
-            variants: vec![
-                Variant { provider_id: "only".into(), model_id: "m".into(), weight: 100 },
-            ],
+            variants: vec![Variant {
+                provider_id: "only".into(),
+                model_id: "m".into(),
+                weight: 100,
+            }],
         };
 
         let v = exp.select_variant("any-key").unwrap();
@@ -214,9 +232,11 @@ mod tests {
     async fn test_experiment_router_uses_variant() {
         let exp = Experiment {
             name: "test".into(),
-            variants: vec![
-                Variant { provider_id: "exp-provider".into(), model_id: "exp-model".into(), weight: 100 },
-            ],
+            variants: vec![Variant {
+                provider_id: "exp-provider".into(),
+                model_id: "exp-model".into(),
+                weight: 100,
+            }],
         };
         let router = ExperimentRouter::new(Arc::new(MockRouter), exp);
 
@@ -228,9 +248,11 @@ mod tests {
     async fn test_fallback_chain_includes_inner() {
         let exp = Experiment {
             name: "test".into(),
-            variants: vec![
-                Variant { provider_id: "exp".into(), model_id: "m".into(), weight: 100 },
-            ],
+            variants: vec![Variant {
+                provider_id: "exp".into(),
+                model_id: "m".into(),
+                weight: 100,
+            }],
         };
         let router = ExperimentRouter::new(Arc::new(MockRouter), exp);
 

@@ -211,14 +211,7 @@ mod tests {
         for i in 0..25 {
             backend
                 .record_call(make_record(
-                    "openai",
-                    "gpt-4o",
-                    i as u64,
-                    100,
-                    50,
-                    0.001,
-                    true,
-                    ts,
+                    "openai", "gpt-4o", i as u64, 100, 50, 0.001, true, ts,
                 ))
                 .await
                 .unwrap();

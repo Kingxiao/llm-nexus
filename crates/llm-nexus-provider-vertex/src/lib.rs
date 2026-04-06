@@ -57,11 +57,10 @@ impl VertexAiProvider {
     /// If `base_url` is "auto" or empty, constructs from `VERTEX_PROJECT_ID` + `VERTEX_LOCATION`.
     pub fn from_config(config: &ProviderConfig) -> NexusResult<Self> {
         let base_url = if config.base_url.is_empty() || config.base_url == "auto" {
-            let project_id = std::env::var("VERTEX_PROJECT_ID").map_err(|_| {
-                NexusError::AuthError("VERTEX_PROJECT_ID not set".into())
-            })?;
-            let location = std::env::var("VERTEX_LOCATION")
-                .unwrap_or_else(|_| "us-central1".to_string());
+            let project_id = std::env::var("VERTEX_PROJECT_ID")
+                .map_err(|_| NexusError::AuthError("VERTEX_PROJECT_ID not set".into()))?;
+            let location =
+                std::env::var("VERTEX_LOCATION").unwrap_or_else(|_| "us-central1".to_string());
 
             // Vertex AI OpenAI-compatible endpoint — verified: 2026-04-04
             format!(
@@ -71,9 +70,8 @@ impl VertexAiProvider {
             config.base_url.trim_end_matches('/').to_string()
         };
 
-        let token_cache = TokenCache::new().map_err(|e| {
-            NexusError::AuthError(format!("Vertex AI token init failed: {e}"))
-        })?;
+        let token_cache = TokenCache::new()
+            .map_err(|e| NexusError::AuthError(format!("Vertex AI token init failed: {e}")))?;
 
         let client = reqwest::Client::builder()
             .timeout(Duration::from_secs(config.timeout_secs))

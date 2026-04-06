@@ -6,8 +6,8 @@
 #[cfg(test)]
 pub(crate) mod mocks {
     use std::pin::Pin;
-    use std::sync::atomic::{AtomicU32, Ordering};
     use std::sync::Arc;
+    use std::sync::atomic::{AtomicU32, Ordering};
     use std::time::Duration;
 
     use futures::Stream;
@@ -53,7 +53,11 @@ pub(crate) mod mocks {
             let msg = error.to_string();
             let factory: ErrorFactory = match error {
                 NexusError::AuthError(_) => Box::new(move || NexusError::AuthError(msg.clone())),
-                NexusError::ProviderError { provider, status_code, .. } => {
+                NexusError::ProviderError {
+                    provider,
+                    status_code,
+                    ..
+                } => {
                     let p = provider.clone();
                     let m = msg.clone();
                     Box::new(move || NexusError::ProviderError {

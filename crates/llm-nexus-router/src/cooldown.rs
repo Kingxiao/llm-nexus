@@ -4,8 +4,8 @@
 //! currently in cooldown from the fallback chain.
 
 use std::collections::HashMap;
-use std::sync::Mutex;
 use std::sync::Arc;
+use std::sync::Mutex;
 use std::time::{Duration, Instant};
 
 use llm_nexus_core::error::NexusResult;
@@ -79,15 +79,13 @@ impl Router for CooldownRouter {
     async fn route(&self, context: &RouteContext) -> NexusResult<RouteDecision> {
         // Get the full chain and return the first non-cooldown provider
         let chain = self.fallback_chain(context).await?;
-        chain.into_iter().next().ok_or(
-            llm_nexus_core::error::NexusError::NoRouteAvailable,
-        )
+        chain
+            .into_iter()
+            .next()
+            .ok_or(llm_nexus_core::error::NexusError::NoRouteAvailable)
     }
 
-    async fn fallback_chain(
-        &self,
-        context: &RouteContext,
-    ) -> NexusResult<Vec<RouteDecision>> {
+    async fn fallback_chain(&self, context: &RouteContext) -> NexusResult<Vec<RouteDecision>> {
         let chain = self.inner.fallback_chain(context).await?;
         let filtered: Vec<_> = chain
             .into_iter()

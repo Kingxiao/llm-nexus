@@ -13,8 +13,8 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use futures::StreamExt;
-use llm_nexus::client::NexusClient;
 use llm_nexus::NexusError;
+use llm_nexus::client::NexusClient;
 use llm_nexus_cache::CacheMiddleware;
 use llm_nexus_core::store::InMemoryStore;
 use llm_nexus_core::types::request::{ChatRequest, Message};
@@ -46,7 +46,10 @@ fn test_provider_registration() {
     let client = build_client();
     let providers = client.provider_ids();
     println!("registered providers: {providers:?}");
-    assert!(!providers.is_empty(), "at least one provider should register");
+    assert!(
+        !providers.is_empty(),
+        "at least one provider should register"
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -72,7 +75,10 @@ async fn test_openrouter_chat() {
     assert!(resp.is_ok(), "openrouter chat failed: {resp:?}");
     let resp = resp.unwrap();
     assert!(!resp.content.is_empty());
-    println!("openrouter: model={} content='{}' tokens={}", resp.model, resp.content, resp.usage.total_tokens);
+    println!(
+        "openrouter: model={} content='{}' tokens={}",
+        resp.model, resp.content, resp.usage.total_tokens
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -95,8 +101,13 @@ async fn test_minimax_chat() {
     };
     let resp = client.chat(&req).await;
     match &resp {
-        Err(NexusError::ProviderError { status_code: Some(401), .. }) => {
-            eprintln!("minimax: 401 auth error — check MINIMAX_API_KEY format (may need group_id.api_key)");
+        Err(NexusError::ProviderError {
+            status_code: Some(401),
+            ..
+        }) => {
+            eprintln!(
+                "minimax: 401 auth error — check MINIMAX_API_KEY format (may need group_id.api_key)"
+            );
             return; // skip, not fail
         }
         _ => {}
@@ -105,7 +116,10 @@ async fn test_minimax_chat() {
     assert!(resp.is_ok(), "minimax chat failed: {resp:?}");
     let resp = resp.unwrap();
     assert!(!resp.content.is_empty());
-    println!("minimax: model={} content='{}' tokens={}", resp.model, resp.content, resp.usage.total_tokens);
+    println!(
+        "minimax: model={} content='{}' tokens={}",
+        resp.model, resp.content, resp.usage.total_tokens
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -134,7 +148,10 @@ async fn test_302ai_chat() {
     assert!(resp.is_ok(), "302.ai chat failed");
     let resp = resp.unwrap();
     assert!(!resp.content.is_empty());
-    println!("302.ai: model={} content='{}' tokens={}", resp.model, resp.content, resp.usage.total_tokens);
+    println!(
+        "302.ai: model={} content='{}' tokens={}",
+        resp.model, resp.content, resp.usage.total_tokens
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -215,15 +232,26 @@ async fn test_cache_with_real_provider() {
     let start1 = std::time::Instant::now();
     let resp1 = client.chat(&req).await.unwrap();
     let dur1 = start1.elapsed();
-    println!("first call: {}ms, content='{}'", dur1.as_millis(), resp1.content);
+    println!(
+        "first call: {}ms, content='{}'",
+        dur1.as_millis(),
+        resp1.content
+    );
 
     // Second call — should hit cache (much faster)
     let start2 = std::time::Instant::now();
     let resp2 = client.chat(&req).await.unwrap();
     let dur2 = start2.elapsed();
-    println!("second call: {}ms, content='{}'", dur2.as_millis(), resp2.content);
+    println!(
+        "second call: {}ms, content='{}'",
+        dur2.as_millis(),
+        resp2.content
+    );
 
     assert_eq!(resp1.content, resp2.content, "cached response should match");
     assert!(dur2 < dur1, "cache hit should be faster than API call");
-    println!("cache speedup: {:.1}x", dur1.as_millis() as f64 / dur2.as_millis().max(1) as f64);
+    println!(
+        "cache speedup: {:.1}x",
+        dur1.as_millis() as f64 / dur2.as_millis().max(1) as f64
+    );
 }

@@ -133,8 +133,7 @@ mod tests {
         // the cache hit path by checking the store
         let cached = store.get(&key).await.unwrap();
         assert!(cached.is_some());
-        let cached_resp: ChatResponse =
-            serde_json::from_slice(&cached.unwrap()).unwrap();
+        let cached_resp: ChatResponse = serde_json::from_slice(&cached.unwrap()).unwrap();
         assert_eq!(cached_resp.content, "cached content");
 
         // Verify CacheHit marker

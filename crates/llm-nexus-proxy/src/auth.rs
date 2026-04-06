@@ -67,7 +67,11 @@ pub async fn auth_middleware(
     };
 
     // Check master token first
-    if auth.master_token.as_deref().is_some_and(|m| constant_time_eq(token, m)) {
+    if auth
+        .master_token
+        .as_deref()
+        .is_some_and(|m| constant_time_eq(token, m))
+    {
         return next.run(request).await;
     }
 

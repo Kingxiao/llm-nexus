@@ -73,6 +73,7 @@ impl VectorIndex {
     }
 
     /// Number of non-expired entries.
+    #[allow(dead_code)]
     pub fn len(&self) -> usize {
         let entries = self.entries.read().unwrap_or_else(|e| e.into_inner());
         let now = Instant::now();

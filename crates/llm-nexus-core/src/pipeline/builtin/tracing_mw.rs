@@ -48,7 +48,10 @@ impl TracingMiddleware {
             SpanValue::String(request.model.clone()),
         );
         if let Some(t) = request.temperature {
-            attrs.insert("gen_ai.request.temperature".into(), SpanValue::Float(t as f64));
+            attrs.insert(
+                "gen_ai.request.temperature".into(),
+                SpanValue::Float(t as f64),
+            );
         }
         if let Some(m) = request.max_tokens {
             attrs.insert("gen_ai.request.max_tokens".into(), SpanValue::Int(m as i64));
@@ -174,13 +177,11 @@ mod tests {
     async fn test_tracing_exports_span_on_failure() {
         let exporter = Arc::new(RecordingExporter::new());
         let mw = TracingMiddleware::new(exporter.clone());
-        let dispatcher = MockDispatcher::with_error(
-            crate::error::NexusError::ProviderError {
-                provider: "mock".into(),
-                message: "fail".into(),
-                status_code: Some(500),
-            },
-        );
+        let dispatcher = MockDispatcher::with_error(crate::error::NexusError::ProviderError {
+            provider: "mock".into(),
+            message: "fail".into(),
+            status_code: Some(500),
+        });
         let _ = run_middleware(&mw, &dispatcher, &test_request()).await;
 
         let spans = exporter.spans();

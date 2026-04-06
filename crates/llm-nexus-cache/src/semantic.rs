@@ -15,9 +15,9 @@ use llm_nexus_core::error::{NexusError, NexusResult};
 use llm_nexus_core::pipeline::context::RequestContext;
 use llm_nexus_core::pipeline::middleware::{ChatMiddleware, Next, NextStream};
 use llm_nexus_core::traits::embedding::EmbeddingProvider;
+use llm_nexus_core::types::EmbedRequest;
 use llm_nexus_core::types::request::{ChatRequest, MessageContent, Role};
 use llm_nexus_core::types::response::{ChatResponse, StreamChunk};
-use llm_nexus_core::types::EmbedRequest;
 
 use crate::vector_index::VectorIndex;
 
@@ -54,6 +54,7 @@ pub struct SemanticCacheConfig {
 }
 
 /// Marker inserted into RequestContext on semantic cache hit.
+#[allow(dead_code)]
 pub struct SemanticCacheHit {
     pub similarity: f32,
 }
@@ -83,10 +84,7 @@ impl SemanticCacheMiddleware {
                     let texts: Vec<String> = parts
                         .iter()
                         .filter_map(|p| {
-                            if let llm_nexus_core::types::request::ContentPart::Text {
-                                text,
-                            } = p
-                            {
+                            if let llm_nexus_core::types::request::ContentPart::Text { text } = p {
                                 Some(text.clone())
                             } else {
                                 None
@@ -149,14 +147,14 @@ impl ChatMiddleware for SemanticCacheMiddleware {
         };
 
         // Search index
-        if let Some(cached) = self.index.search(&embedding, self.similarity_threshold) {
-            if let Ok(response) = serde_json::from_slice::<ChatResponse>(&cached) {
-                tracing::debug!("semantic cache hit");
-                ctx.insert(SemanticCacheHit {
-                    similarity: self.similarity_threshold,
-                });
-                return Ok(response);
-            }
+        if let Some(cached) = self.index.search(&embedding, self.similarity_threshold)
+            && let Ok(response) = serde_json::from_slice::<ChatResponse>(&cached)
+        {
+            tracing::debug!("semantic cache hit");
+            ctx.insert(SemanticCacheHit {
+                similarity: self.similarity_threshold,
+            });
+            return Ok(response);
         }
 
         // Cache miss — call provider
@@ -164,8 +162,7 @@ impl ChatMiddleware for SemanticCacheMiddleware {
 
         // Store in cache (best-effort)
         if let Ok(serialized) = serde_json::to_vec(&response) {
-            self.index
-                .insert(embedding, serialized, self.default_ttl);
+            self.index.insert(embedding, serialized, self.default_ttl);
         }
 
         Ok(response)
@@ -185,9 +182,9 @@ impl ChatMiddleware for SemanticCacheMiddleware {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use llm_nexus_core::types::EmbedResponse;
     use llm_nexus_core::types::request::Message;
     use llm_nexus_core::types::response::Usage;
-    use llm_nexus_core::types::EmbedResponse;
 
     /// Mock embedding provider that returns a fixed vector based on input text.
     struct MockEmbedder;
@@ -319,13 +316,14 @@ mod tests {
         };
 
         let serialized = serde_json::to_vec(&response).unwrap();
-        cache.index.insert(embedding.clone(), serialized, Duration::from_secs(60));
+        cache
+            .index
+            .insert(embedding.clone(), serialized, Duration::from_secs(60));
 
         let found = cache.index.search(&embedding, 0.95);
         assert!(found.is_some());
 
-        let deserialized: ChatResponse =
-            serde_json::from_slice(&found.unwrap()).unwrap();
+        let deserialized: ChatResponse = serde_json::from_slice(&found.unwrap()).unwrap();
         assert_eq!(deserialized.content, "cached answer");
     }
 }

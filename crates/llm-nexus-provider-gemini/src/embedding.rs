@@ -47,12 +47,7 @@ impl GeminiProvider {
             body["outputDimensionality"] = serde_json::json!(dims);
         }
 
-        let response = self
-            .client
-            .post(&url)
-            .json(&body)
-            .send()
-            .await?;
+        let response = self.client.post(&url).json(&body).send().await?;
 
         let status = response.status();
         if !status.is_success() {
@@ -113,12 +108,7 @@ impl GeminiProvider {
 
         let body = serde_json::json!({ "requests": requests });
 
-        let response = self
-            .client
-            .post(&url)
-            .json(&body)
-            .send()
-            .await?;
+        let response = self.client.post(&url).json(&body).send().await?;
 
         let status = response.status();
         if !status.is_success() {
@@ -196,9 +186,7 @@ mod tests {
     async fn test_embed_batch() {
         let server = MockServer::start().await;
         Mock::given(method("POST"))
-            .and(path(
-                "/v1beta/models/text-embedding-004:batchEmbedContents",
-            ))
+            .and(path("/v1beta/models/text-embedding-004:batchEmbedContents"))
             .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
                 "embeddings": [
                     {"values": [0.1, 0.2]},

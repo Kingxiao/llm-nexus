@@ -17,7 +17,7 @@ pub mod experiment;
 pub mod fallback;
 pub mod scorer;
 
-pub use composite::{composite_router, latency_router, WeightedScorer};
+pub use composite::{WeightedScorer, composite_router, latency_router};
 pub use cooldown::{CooldownRouter, ProviderHealthState};
 pub use cost_router::CostRouter;
 pub use experiment::ExperimentRouter;

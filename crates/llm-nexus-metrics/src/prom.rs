@@ -9,7 +9,7 @@ use async_trait::async_trait;
 use prometheus_client::encoding::text::encode;
 use prometheus_client::metrics::counter::Counter;
 use prometheus_client::metrics::family::Family;
-use prometheus_client::metrics::histogram::{exponential_buckets, Histogram};
+use prometheus_client::metrics::histogram::{Histogram, exponential_buckets};
 use prometheus_client::registry::Registry;
 
 use llm_nexus_core::error::NexusResult;
@@ -261,10 +261,7 @@ mod tests {
             .await
             .unwrap();
 
-        let stats = exporter
-            .query_stats(&StatsFilter::default())
-            .await
-            .unwrap();
+        let stats = exporter.query_stats(&StatsFilter::default()).await.unwrap();
         assert_eq!(stats.total_calls, 1);
     }
 }

@@ -219,11 +219,7 @@ fn extract_tool_calls(candidate: &GeminiCandidate) -> Option<Vec<ToolCall>> {
         })
         .unwrap_or_default();
 
-    if calls.is_empty() {
-        None
-    } else {
-        Some(calls)
-    }
+    if calls.is_empty() { None } else { Some(calls) }
 }
 
 fn parse_gemini_finish_reason(reason: &str) -> FinishReason {

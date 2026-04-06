@@ -114,9 +114,7 @@ mod tests {
         let cost_only = CostScorer;
         let ctx = RouteContext::default();
         let m = make_model("test", 5.0, 15.0, Some(100));
-        assert!(
-            (scorer.score(&m, &ctx) - cost_only.score(&m, &ctx)).abs() < f64::EPSILON
-        );
+        assert!((scorer.score(&m, &ctx) - cost_only.score(&m, &ctx)).abs() < f64::EPSILON);
     }
 
     #[test]
@@ -129,9 +127,7 @@ mod tests {
         let ctx = RouteContext::default();
         let m = make_model("test", 5.0, 15.0, Some(9999));
         // Even though latency is huge, weight 0.0 makes it irrelevant
-        assert!(
-            (scorer.score(&m, &ctx) - cost_only.score(&m, &ctx)).abs() < f64::EPSILON
-        );
+        assert!((scorer.score(&m, &ctx) - cost_only.score(&m, &ctx)).abs() < f64::EPSILON);
     }
 
     #[tokio::test]
@@ -147,10 +143,7 @@ mod tests {
         // Cost-only: should prefer cheap-slow
         let cost_only = composite_router(
             models.clone(),
-            vec![
-                (Box::new(CostScorer), 1.0),
-                (Box::new(LatencyScorer), 0.0),
-            ],
+            vec![(Box::new(CostScorer), 1.0), (Box::new(LatencyScorer), 0.0)],
         );
         let ctx = RouteContext::default();
         let decision = cost_only.route(&ctx).await.unwrap();
@@ -159,10 +152,7 @@ mod tests {
         // Latency-only: should prefer expensive-fast
         let latency_only = composite_router(
             models,
-            vec![
-                (Box::new(CostScorer), 0.0),
-                (Box::new(LatencyScorer), 1.0),
-            ],
+            vec![(Box::new(CostScorer), 0.0), (Box::new(LatencyScorer), 1.0)],
         );
         let decision = latency_only.route(&ctx).await.unwrap();
         assert_eq!(decision.model_id, "expensive-fast");
@@ -179,10 +169,7 @@ mod tests {
         // Equal weight: blended score decides order
         let router = composite_router(
             models,
-            vec![
-                (Box::new(CostScorer), 0.5),
-                (Box::new(LatencyScorer), 0.5),
-            ],
+            vec![(Box::new(CostScorer), 0.5), (Box::new(LatencyScorer), 0.5)],
         );
         let ctx = RouteContext::default();
         let chain = router.fallback_chain(&ctx).await.unwrap();

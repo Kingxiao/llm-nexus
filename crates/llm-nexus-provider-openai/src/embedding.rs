@@ -75,10 +75,7 @@ impl EmbeddingProvider for OpenAiProvider {
         };
 
         Ok(EmbedResponse {
-            model: resp["model"]
-                .as_str()
-                .unwrap_or(&request.model)
-                .to_string(),
+            model: resp["model"].as_str().unwrap_or(&request.model).to_string(),
             embeddings,
             usage,
         })

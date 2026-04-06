@@ -9,8 +9,8 @@
 //! 6. Batch chat works through the pipeline
 
 use std::path::Path;
-use std::sync::atomic::{AtomicU32, Ordering};
 use std::sync::Arc;
+use std::sync::atomic::{AtomicU32, Ordering};
 use std::time::Duration;
 
 use futures::Stream;
@@ -201,7 +201,11 @@ async fn test_cache_short_circuits_pipeline() {
     // Second call — cache hit, provider NOT called again
     let resp2 = client.chat(&req).await.unwrap();
     assert_eq!(resp2.content, "from provider");
-    assert_eq!(provider.count(), 1, "provider should not be called on cache hit");
+    assert_eq!(
+        provider.count(),
+        1,
+        "provider should not be called on cache hit"
+    );
 }
 
 #[tokio::test]
@@ -212,7 +216,10 @@ async fn test_guardrail_blocks_forbidden_request() {
     let client = NexusClient::builder()
         .config_dir(&config_dir())
         .unwrap()
-        .with_provider("openai", Arc::new(CountingProvider::new("should not reach")))
+        .with_provider(
+            "openai",
+            Arc::new(CountingProvider::new("should not reach")),
+        )
         .with_middleware(guardrail)
         .build()
         .unwrap();

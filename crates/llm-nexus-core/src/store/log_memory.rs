@@ -44,10 +44,18 @@ impl LogBackend for InMemoryLogBackend {
     async fn query_logs(&self, filter: &LogFilter) -> NexusResult<Vec<RequestLogEntry>> {
         let entries = self.entries.lock().unwrap_or_else(|e| e.into_inner());
         let iter = entries.iter().filter(|e| {
-            if filter.provider_id.as_ref().is_some_and(|pid| &e.provider_id != pid) {
+            if filter
+                .provider_id
+                .as_ref()
+                .is_some_and(|pid| &e.provider_id != pid)
+            {
                 return false;
             }
-            if filter.model_id.as_ref().is_some_and(|mid| &e.model_id != mid) {
+            if filter
+                .model_id
+                .as_ref()
+                .is_some_and(|mid| &e.model_id != mid)
+            {
                 return false;
             }
             if filter.since.is_some_and(|since| e.timestamp < since) {
@@ -94,8 +102,14 @@ mod tests {
     #[tokio::test]
     async fn test_log_and_query() {
         let backend = InMemoryLogBackend::new(100);
-        backend.log_request(make_entry("openai", "gpt-5")).await.unwrap();
-        backend.log_request(make_entry("anthropic", "claude")).await.unwrap();
+        backend
+            .log_request(make_entry("openai", "gpt-5"))
+            .await
+            .unwrap();
+        backend
+            .log_request(make_entry("anthropic", "claude"))
+            .await
+            .unwrap();
 
         let all = backend.query_logs(&LogFilter::default()).await.unwrap();
         assert_eq!(all.len(), 2);

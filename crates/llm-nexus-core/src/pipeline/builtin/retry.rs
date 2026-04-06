@@ -88,8 +88,7 @@ impl ChatMiddleware for RetryMiddleware {
                         tokio::time::sleep(std::time::Duration::from_millis(*ms)).await;
                     } else {
                         let jitter = delay / 4;
-                        let actual_delay =
-                            delay + crate::middleware::retry::rand_simple(jitter);
+                        let actual_delay = delay + crate::middleware::retry::rand_simple(jitter);
                         tokio::time::sleep(std::time::Duration::from_millis(actual_delay)).await;
                     }
 
@@ -137,7 +136,12 @@ mod tests {
         let dispatcher = FailThenSucceedDispatcher::new(2); // fail 2x, succeed on 3rd
         let resp = run_middleware(&mw, &dispatcher, &test_request()).await;
         assert_eq!(resp.unwrap().content, "recovered");
-        assert_eq!(dispatcher.call_count.load(std::sync::atomic::Ordering::Relaxed), 3);
+        assert_eq!(
+            dispatcher
+                .call_count
+                .load(std::sync::atomic::Ordering::Relaxed),
+            3
+        );
     }
 
     #[tokio::test]
@@ -158,9 +162,8 @@ mod tests {
     async fn test_retry_no_retry_on_auth_error() {
         tokio::time::pause();
         let mw = RetryMiddleware::with_defaults();
-        let dispatcher = MockDispatcher::with_error(
-            crate::error::NexusError::AuthError("bad key".into()),
-        );
+        let dispatcher =
+            MockDispatcher::with_error(crate::error::NexusError::AuthError("bad key".into()));
         let result = run_middleware(&mw, &dispatcher, &test_request()).await;
         assert!(result.is_err());
         // Auth errors are not retryable — should fail on first attempt only

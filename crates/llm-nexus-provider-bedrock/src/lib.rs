@@ -153,21 +153,17 @@ impl ChatProvider for BedrockProvider {
                 match event_receiver.recv().await {
                     Ok(Some(event)) => {
                         let chunk = match event {
-                            CSOEvent::ContentBlockDelta(delta_event) => {
-                                match delta_event.delta() {
-                                    Some(
-                                        aws_sdk_bedrockruntime::types::ContentBlockDelta::Text(
-                                            text,
-                                        ),
-                                    ) => Some(StreamChunk {
-                                        delta_content: Some(text.clone()),
-                                        delta_tool_call: None,
-                                        finish_reason: None,
-                                        usage: None,
-                                    }),
-                                    _ => None,
-                                }
-                            }
+                            CSOEvent::ContentBlockDelta(delta_event) => match delta_event.delta() {
+                                Some(aws_sdk_bedrockruntime::types::ContentBlockDelta::Text(
+                                    text,
+                                )) => Some(StreamChunk {
+                                    delta_content: Some(text.clone()),
+                                    delta_tool_call: None,
+                                    finish_reason: None,
+                                    usage: None,
+                                }),
+                                _ => None,
+                            },
                             CSOEvent::MessageStop(stop_event) => {
                                 let reason = match stop_event.stop_reason() {
                                     aws_sdk_bedrockruntime::types::StopReason::EndTurn => {

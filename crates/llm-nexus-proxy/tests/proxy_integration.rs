@@ -230,10 +230,12 @@ async fn test_chat_completions_model_not_found() {
         .await
         .unwrap();
     let json: serde_json::Value = serde_json::from_slice(&body).unwrap();
-    assert!(json["error"]["message"]
-        .as_str()
-        .unwrap()
-        .contains("nonexistent"));
+    assert!(
+        json["error"]["message"]
+            .as_str()
+            .unwrap()
+            .contains("nonexistent")
+    );
 }
 
 #[tokio::test]

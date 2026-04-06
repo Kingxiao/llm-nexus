@@ -144,8 +144,7 @@ async fn main() {
     for n in [1, 3, 5, 10] {
         let elapsed = bench_with_middleware(n, iterations).await;
         let ns_per_op = elapsed.as_nanos() as f64 / iterations as f64;
-        let overhead =
-            ns_per_op - (direct.as_nanos() as f64 / iterations as f64);
+        let overhead = ns_per_op - (direct.as_nanos() as f64 / iterations as f64);
         println!(
             "{n:>2} middleware layers:            {:>8.2} ns/op  (+{:.2} ns overhead)",
             ns_per_op, overhead

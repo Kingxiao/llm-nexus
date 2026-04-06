@@ -27,7 +27,10 @@ impl ProviderDispatcher {
         &self,
         ctx: &mut RequestContext,
         request: &ChatRequest,
-    ) -> NexusResult<(Arc<dyn llm_nexus_core::traits::chat::ChatProvider>, llm_nexus_core::types::model::ModelMetadata)> {
+    ) -> NexusResult<(
+        Arc<dyn llm_nexus_core::traits::chat::ChatProvider>,
+        llm_nexus_core::types::model::ModelMetadata,
+    )> {
         let model_meta = self
             .registry
             .get_model(&request.model)

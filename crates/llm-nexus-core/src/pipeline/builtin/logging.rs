@@ -54,13 +54,7 @@ impl ChatMiddleware for LoggingMiddleware {
                 };
                 (true, body, resp.usage.clone(), 0.0, None)
             }
-            Err(e) => (
-                false,
-                None,
-                Usage::default(),
-                0.0,
-                Some(e.to_string()),
-            ),
+            Err(e) => (false, None, Usage::default(), 0.0, Some(e.to_string())),
         };
 
         let entry = RequestLogEntry {
@@ -153,13 +147,11 @@ mod tests {
     async fn test_logging_records_failed_request() {
         let log_backend = Arc::new(InMemoryLogBackend::new(100));
         let mw = LoggingMiddleware::new(log_backend.clone(), false);
-        let dispatcher = MockDispatcher::with_error(
-            crate::error::NexusError::ProviderError {
-                provider: "mock".into(),
-                message: "fail".into(),
-                status_code: Some(500),
-            },
-        );
+        let dispatcher = MockDispatcher::with_error(crate::error::NexusError::ProviderError {
+            provider: "mock".into(),
+            message: "fail".into(),
+            status_code: Some(500),
+        });
         let _ = run_middleware(&mw, &dispatcher, &test_request()).await;
 
         let logs = log_backend.query_logs(&LogFilter::default()).await.unwrap();

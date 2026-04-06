@@ -114,9 +114,10 @@ impl ModelRegistry for RemoteRegistry {
             request = request.bearer_auth(key);
         }
 
-        let response = request.send().await.map_err(|e| {
-            NexusError::HttpError(format!("failed to fetch remote models: {e}"))
-        })?;
+        let response = request
+            .send()
+            .await
+            .map_err(|e| NexusError::HttpError(format!("failed to fetch remote models: {e}")))?;
 
         if !response.status().is_success() {
             return Err(NexusError::ProviderError {
@@ -225,12 +226,7 @@ fn convert_openrouter_model(m: OpenRouterModel) -> NexusResult<ModelMetadata> {
         * 1_000_000.0;
 
     // Extract provider from model ID (e.g., "openai/gpt-5.4" -> "openai")
-    let provider = m
-        .id
-        .split('/')
-        .next()
-        .unwrap_or("unknown")
-        .to_string();
+    let provider = m.id.split('/').next().unwrap_or("unknown").to_string();
 
     let modality = m
         .architecture
@@ -271,21 +267,17 @@ fn convert_openrouter_model(m: OpenRouterModel) -> NexusResult<ModelMetadata> {
 // ---------- Cache ----------
 
 fn load_cache(path: &Path) -> NexusResult<Vec<ModelMetadata>> {
-    let data = std::fs::read_to_string(path).map_err(|e| {
-        NexusError::ConfigError(format!("failed to read cache: {e}"))
-    })?;
-    serde_json::from_str(&data).map_err(|e| {
-        NexusError::SerializationError(format!("failed to parse cache: {e}"))
-    })
+    let data = std::fs::read_to_string(path)
+        .map_err(|e| NexusError::ConfigError(format!("failed to read cache: {e}")))?;
+    serde_json::from_str(&data)
+        .map_err(|e| NexusError::SerializationError(format!("failed to parse cache: {e}")))
 }
 
 fn save_cache(path: &Path, models: &[ModelMetadata]) -> NexusResult<()> {
-    let data = serde_json::to_string_pretty(models).map_err(|e| {
-        NexusError::SerializationError(format!("failed to serialize cache: {e}"))
-    })?;
-    std::fs::write(path, data).map_err(|e| {
-        NexusError::ConfigError(format!("failed to write cache: {e}"))
-    })
+    let data = serde_json::to_string_pretty(models)
+        .map_err(|e| NexusError::SerializationError(format!("failed to serialize cache: {e}")))?;
+    std::fs::write(path, data)
+        .map_err(|e| NexusError::ConfigError(format!("failed to write cache: {e}")))
 }
 
 fn apply_override(model: &mut ModelMetadata, ov: &ModelOverride) {
@@ -377,11 +369,7 @@ mod tests {
         assert_eq!(models.len(), 3);
 
         // Verify remote model pricing converted correctly
-        let gpt = registry
-            .get_model("openai/gpt-5.4")
-            .await
-            .unwrap()
-            .unwrap();
+        let gpt = registry.get_model("openai/gpt-5.4").await.unwrap().unwrap();
         assert!((gpt.input_price_per_1m - 2.5).abs() < 0.01);
         assert!((gpt.output_price_per_1m - 15.0).abs() < 0.01);
         assert_eq!(gpt.context_window, 1000000);
@@ -418,11 +406,7 @@ mod tests {
 
         registry.refresh().await.unwrap();
 
-        let model = registry
-            .get_model("builtin-model")
-            .await
-            .unwrap()
-            .unwrap();
+        let model = registry.get_model("builtin-model").await.unwrap().unwrap();
         // Remote overwrites builtin
         assert_eq!(model.display_name, "Remote Version");
         assert_eq!(model.context_window, 128000);
@@ -458,11 +442,7 @@ mod tests {
         )
         .unwrap();
 
-        let model = registry
-            .get_model("openai/gpt-5.4")
-            .await
-            .unwrap()
-            .unwrap();
+        let model = registry.get_model("openai/gpt-5.4").await.unwrap().unwrap();
         assert!((model.input_price_per_1m - 0.99).abs() < 0.01);
         // Output price unchanged from remote
         assert!((model.output_price_per_1m - 15.0).abs() < 0.01);

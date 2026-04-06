@@ -29,8 +29,8 @@ use std::sync::Arc;
 
 use axum::Router;
 use llm_nexus::NexusClient;
-use tower::limit::ConcurrencyLimitLayer;
 use tower::ServiceBuilder;
+use tower::limit::ConcurrencyLimitLayer;
 use tower_http::cors::CorsLayer;
 use tower_http::trace::TraceLayer;
 
@@ -79,10 +79,7 @@ pub fn build_router_with_state(state: AppState) -> Router {
             "/v1/chat/completions",
             axum::routing::post(handlers::chat_completions),
         )
-        .route(
-            "/v1/embeddings",
-            axum::routing::post(handlers::embeddings),
-        )
+        .route("/v1/embeddings", axum::routing::post(handlers::embeddings))
         .route("/v1/models", axum::routing::get(handlers::list_models))
         .route("/health", axum::routing::get(handlers::health))
         .route("/metrics", axum::routing::get(handlers::metrics))

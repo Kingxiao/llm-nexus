@@ -47,9 +47,9 @@ pub use llm_nexus_core::types;
 // Re-export key types at top level
 pub use llm_nexus_core::traits::metrics::StatsFilter;
 pub use llm_nexus_core::traits::router::RouteContext;
+pub use llm_nexus_core::types::embed::{EmbedRequest, EmbedResponse};
 pub use llm_nexus_core::types::model::{Capability, ModelMetadata};
 pub use llm_nexus_core::types::request::{ChatRequest, Message};
-pub use llm_nexus_core::types::embed::{EmbedRequest, EmbedResponse};
 pub use llm_nexus_core::types::response::{ChatResponse, StreamChunk, Usage};
 
 // Re-export the client

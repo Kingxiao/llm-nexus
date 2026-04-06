@@ -121,10 +121,7 @@ impl AzureOpenAiProvider {
     pub(crate) fn chat_url(&self, model: &str) -> String {
         if let Some(ref version) = self.api_version {
             // Classic: /openai/deployments/{deployment}/chat/completions?api-version={v}
-            let deployment = self
-                .default_deployment
-                .as_deref()
-                .unwrap_or(model);
+            let deployment = self.default_deployment.as_deref().unwrap_or(model);
             format!(
                 "{}/openai/deployments/{}/chat/completions?api-version={}",
                 self.resource_endpoint, deployment, version

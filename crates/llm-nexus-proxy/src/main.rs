@@ -5,7 +5,7 @@ use std::path::PathBuf;
 use std::sync::Arc;
 
 use llm_nexus::NexusClient;
-use llm_nexus_proxy::{build_router_with_state, AppState};
+use llm_nexus_proxy::{AppState, build_router_with_state};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -47,7 +47,9 @@ async fn main() -> anyhow::Result<()> {
             Some(Arc::new(move || exporter_ref.gather()))
         }
         #[cfg(not(feature = "prometheus"))]
-        { None }
+        {
+            None
+        }
     };
 
     let state = AppState {

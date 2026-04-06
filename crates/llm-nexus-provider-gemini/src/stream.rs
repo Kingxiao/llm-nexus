@@ -40,11 +40,7 @@ pub fn parse_gemini_sse_line(line: &str) -> NexusResult<Option<StreamChunk>> {
                     _ => None,
                 })
                 .collect();
-            if text.is_empty() {
-                None
-            } else {
-                Some(text)
-            }
+            if text.is_empty() { None } else { Some(text) }
         })
     });
 

@@ -162,13 +162,9 @@ mod tests {
             .mount(&server)
             .await;
 
-        let provider = AzureOpenAiProvider::new(
-            server.uri(),
-            "test-key",
-            false,
-            Some("2024-10-21".into()),
-        )
-        .with_default_deployment("my-gpt5");
+        let provider =
+            AzureOpenAiProvider::new(server.uri(), "test-key", false, Some("2024-10-21".into()))
+                .with_default_deployment("my-gpt5");
 
         let request = ChatRequest {
             model: "gpt-5.4".into(),
@@ -230,12 +226,8 @@ mod tests {
             .mount(&server)
             .await;
 
-        let provider = AzureOpenAiProvider::new(
-            server.uri(),
-            "key",
-            false,
-            Some("2024-10-21".into()),
-        );
+        let provider =
+            AzureOpenAiProvider::new(server.uri(), "key", false, Some("2024-10-21".into()));
 
         let request = ChatRequest {
             model: "gpt-5.4".into(),

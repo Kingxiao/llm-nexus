@@ -47,10 +47,7 @@ impl McpClient {
             .spawn()
             .map_err(|e| format!("failed to spawn MCP server: {e}"))?;
 
-        let stdin = child
-            .stdin
-            .take()
-            .ok_or("MCP server stdin not available")?;
+        let stdin = child.stdin.take().ok_or("MCP server stdin not available")?;
         let stdout = child
             .stdout
             .take()
@@ -136,13 +133,11 @@ impl McpClient {
         // Skip notifications (lines without "id" or with non-matching id).
         loop {
             let mut response_line = String::new();
-            let read_result = tokio::time::timeout(
-                self.timeout,
-                self.reader.read_line(&mut response_line),
-            )
-            .await
-            .map_err(|_| format!("MCP server response timeout after {:?}", self.timeout))?
-            .map_err(|e| format!("read error: {e}"))?;
+            let read_result =
+                tokio::time::timeout(self.timeout, self.reader.read_line(&mut response_line))
+                    .await
+                    .map_err(|_| format!("MCP server response timeout after {:?}", self.timeout))?
+                    .map_err(|e| format!("read error: {e}"))?;
 
             if read_result == 0 {
                 return Err("MCP server closed stdout".into());

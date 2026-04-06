@@ -65,8 +65,14 @@ impl NexusClient {
 
         // Record metrics (model_meta populated by dispatcher during pipeline)
         if let Some(ref model_meta) = ctx.model_meta {
-            self.record_metrics(&ctx.request_id, &request.model, model_meta, ctx.elapsed_ms(), &result)
-                .await;
+            self.record_metrics(
+                &ctx.request_id,
+                &request.model,
+                model_meta,
+                ctx.elapsed_ms(),
+                &result,
+            )
+            .await;
         }
 
         result
@@ -191,14 +197,11 @@ impl NexusClient {
             .await
             .map(|m| m.provider)?;
 
-        let provider = self
-            .embedding_providers
-            .get(&provider_id)
-            .ok_or_else(|| {
-                NexusError::ModelNotFound(format!(
-                    "no embedding provider registered for '{provider_id}'"
-                ))
-            })?;
+        let provider = self.embedding_providers.get(&provider_id).ok_or_else(|| {
+            NexusError::ModelNotFound(format!(
+                "no embedding provider registered for '{provider_id}'"
+            ))
+        })?;
 
         provider.embed(request).await
     }

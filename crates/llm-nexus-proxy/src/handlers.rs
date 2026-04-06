@@ -1,19 +1,19 @@
 //! Route handlers for the OpenAI-compatible proxy endpoints.
 
+use axum::Json;
 use axum::extract::{FromRequest, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use axum::Json;
 use llm_nexus::types::model::ModelFilter;
 use llm_nexus_core::error::NexusError;
 use llm_nexus_core::traits::registry::ModelRegistry;
 
+use crate::AppState;
 use crate::embed_types::{OaiEmbedRequest, OaiEmbedResponse};
 use crate::sse::stream_to_sse;
 use crate::types::{
     OaiChatRequest, OaiChatResponse, OaiErrorBody, OaiErrorResponse, OaiModel, OaiModelList,
 };
-use crate::AppState;
 
 /// POST /v1/chat/completions
 ///

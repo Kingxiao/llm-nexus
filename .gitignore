@@ -2,3 +2,5 @@
 *.swp
 *.swo
 .env
+.claude/
+PROGRESS.json

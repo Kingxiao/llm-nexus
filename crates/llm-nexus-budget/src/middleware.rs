@@ -115,10 +115,8 @@ impl ChatMiddleware for BudgetMiddleware {
         // Re-acquire lock to record spend atomically
         let _guard = lock.lock().await;
         if let Some(ref model_meta) = ctx.model_meta {
-            let cost = llm_nexus_metrics::cost_calculator::calculate_cost(
-                &response.usage,
-                model_meta,
-            );
+            let cost =
+                llm_nexus_metrics::cost_calculator::calculate_cost(&response.usage, model_meta);
             if let Err(e) = self.record_spend(&budget_key, cost).await {
                 tracing::warn!(error = %e, "failed to record budget spend");
             }
@@ -170,8 +168,12 @@ impl ChatMiddleware for BudgetMiddleware {
             let key = budget_key.clone();
             tokio::spawn(async move {
                 // Best-effort spend recording for streaming
-                let Ok(Some(data)) = store.get(&key).await else { return };
-                let Ok(mut status) = serde_json::from_slice::<BudgetStatus>(&data) else { return };
+                let Ok(Some(data)) = store.get(&key).await else {
+                    return;
+                };
+                let Ok(mut status) = serde_json::from_slice::<BudgetStatus>(&data) else {
+                    return;
+                };
                 status.spent_usd += cost;
                 status.remaining_usd = (limit - status.spent_usd).max(0.0);
                 status.exceeded = status.spent_usd >= limit;
@@ -270,7 +272,10 @@ mod tests {
 
         let mut status = middleware.get_status("budget:daily").await.unwrap();
         status.period_start = chrono::Utc::now() - chrono::Duration::days(1);
-        middleware.save_status("budget:daily", &status).await.unwrap();
+        middleware
+            .save_status("budget:daily", &status)
+            .await
+            .unwrap();
 
         let fresh = middleware.get_status("budget:daily").await.unwrap();
         assert!((fresh.spent_usd).abs() < f64::EPSILON);
@@ -290,7 +295,10 @@ mod tests {
 
         let mut status = middleware.get_status("budget:total").await.unwrap();
         status.period_start = chrono::Utc::now() - chrono::Duration::days(365);
-        middleware.save_status("budget:total", &status).await.unwrap();
+        middleware
+            .save_status("budget:total", &status)
+            .await
+            .unwrap();
 
         let same = middleware.get_status("budget:total").await.unwrap();
         assert!((same.spent_usd - 8.0).abs() < 0.01);

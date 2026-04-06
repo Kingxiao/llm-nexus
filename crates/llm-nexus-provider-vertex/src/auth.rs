@@ -35,8 +35,8 @@ impl TokenCache {
             inner: RwLock::new(CachedToken {
                 token,
                 obtained_at: Instant::now(),
-                ttl: Duration::from_secs(55 * 60),      // refresh at 55 min
-                full_ttl: Duration::from_secs(60 * 60),  // hard expiry at 60 min
+                ttl: Duration::from_secs(55 * 60), // refresh at 55 min
+                full_ttl: Duration::from_secs(60 * 60), // hard expiry at 60 min
                 is_static,
             }),
         })
