@@ -3,6 +3,11 @@
 //! All integration tests require `NEXUS_INTEGRATION=1` to run.
 //! They hit real provider APIs and require valid API keys in the environment.
 
+// common.rs is compiled as both a standalone test binary and a module included
+// by other test files. The macro and its re-export are unused in the standalone
+// binary context but used by chat_providers.rs / live_providers.rs.
+#![allow(unused_macros, unused_imports)]
+
 use std::path::Path;
 use std::sync::Arc;
 

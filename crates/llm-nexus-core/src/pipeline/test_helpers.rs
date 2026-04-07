@@ -140,6 +140,7 @@ pub(crate) mod mocks {
     pub struct FailThenSucceedDispatcher {
         pub fail_count: u32,
         pub call_count: AtomicU32,
+        #[allow(dead_code)]
         pub error: NexusError,
     }
 

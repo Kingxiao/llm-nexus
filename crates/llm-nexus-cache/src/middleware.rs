@@ -110,7 +110,7 @@ mod tests {
     #[tokio::test]
     async fn test_cache_miss_then_hit() {
         let store = Arc::new(InMemoryStore::new());
-        let cache = CacheMiddleware::new(store.clone(), Duration::from_secs(300));
+        let _cache = CacheMiddleware::new(store.clone(), Duration::from_secs(300));
 
         let request = ChatRequest {
             model: "test-model".into(),
