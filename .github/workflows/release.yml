@@ -55,7 +55,7 @@ jobs:
         run: |
           cargo build --release --package llm-nexus-proxy \
             --target ${{ matrix.target }} \
-            --features prometheus-metrics
+            --features prometheus
 
       - name: Package binary
         run: |
